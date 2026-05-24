@@ -5,23 +5,23 @@ import base64
 from datetime import datetime
 from pathlib import Path
 
-# ── Config from env vars (GitHub Secrets) ──────────────────────────
+# ── Config ─────────────────────────────────────────────────────────
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
 WP_URL            = os.environ["WP_URL"].rstrip("/")
 WP_USER           = os.environ["WP_USER"]
 WP_APP_PASSWORD   = os.environ["WP_APP_PASSWORD"]
+PEXELS_API_KEY    = os.environ.get("PEXELS_API_KEY", "")
 PUBLISH_STATUS    = os.environ.get("PUBLISH_STATUS", "draft")
 
-# ── Referral links from Secrets ────────────────────────────────────
+# ── Referral links (internal pages) ────────────────────────────────
 REFERRAL_LINKS = {
-    "Urbanitae":    os.environ.get("REF_URBANITAE",   "https://ladrillocolectivo.com/urbanitae-opinion/"),
-    "WeCity":       os.environ.get("REF_WECITY",      "https://ladrillocolectivo.com/wecity-opinion/"),
-    "Civislend":    os.environ.get("REF_CIVISLEND",   "https://ladrillocolectivo.com/civislend-opinion/"),
-    "StockCrowd IN":os.environ.get("REF_STOCKCROWD",  "https://ladrillocolectivo.com/stockcrowd-in-opinion/"),
-    "Mintos":       os.environ.get("REF_MINTOS",      "https://ladrillocolectivo.com/mintos-opinion/"),
+    "Urbanitae":     "https://ladrillocolectivo.com/urbanitae-opinion/",
+    "WeCity":        "https://ladrillocolectivo.com/wecity-opinion/",
+    "Civislend":     "https://ladrillocolectivo.com/civislend-opinion/",
+    "StockCrowd IN": "https://ladrillocolectivo.com/stockcrowd-in-opinion/",
+    "Mintos":        "https://ladrillocolectivo.com/mintos-opinion/",
 }
 
-# ── Topic queue ────────────────────────────────────────────────────
 TOPICS_FILE = Path(__file__).parent / "topics" / "queue.json"
 
 def load_topics():
@@ -39,7 +39,7 @@ def pick_topic():
         for t in data["topics"]:
             t["status"] = "pending"
         save_topics(data)
-        pending = data["topics"]
+        pending = [t for t in data["topics"] if t["id"] != 1]  # never reuse topic 1
     return data, pending[0]
 
 def mark_done(data, topic_id):
@@ -49,7 +49,7 @@ def mark_done(data, topic_id):
             t["published_at"] = datetime.utcnow().isoformat()
     save_topics(data)
 
-# ── Get existing post titles from WP to avoid duplicates ───────────
+# ── Get existing content from WP ───────────────────────────────────
 def get_existing_titles() -> list[str]:
     credentials = base64.b64encode(f"{WP_USER}:{WP_APP_PASSWORD}".encode()).decode()
     titles = []
@@ -69,64 +69,134 @@ def get_existing_titles() -> list[str]:
         page += 1
     return titles
 
-# ── Claude API call ────────────────────────────────────────────────
-def generate_article(topic: dict, existing_titles: list[str]) -> dict:
+def get_home_excerpt() -> str:
+    """Fetch home page text to avoid duplicating its content."""
+    try:
+        r = requests.get(WP_URL, timeout=15)
+        # Return first 800 chars of visible text as context
+        import re
+        text = re.sub(r'<[^>]+>', ' ', r.text)
+        text = re.sub(r'\s+', ' ', text).strip()
+        return text[:800]
+    except Exception:
+        return ""
+
+# ── Pexels image ───────────────────────────────────────────────────
+def fetch_pexels_image(query: str) -> dict | None:
+    if not PEXELS_API_KEY:
+        return None
+    try:
+        r = requests.get(
+            "https://api.pexels.com/v1/search",
+            headers={"Authorization": PEXELS_API_KEY},
+            params={"query": query, "per_page": 1, "orientation": "landscape"},
+            timeout=15,
+        )
+        photos = r.json().get("photos", [])
+        if not photos:
+            return None
+        photo = photos[0]
+        return {
+            "url":          photo["src"]["large2x"],
+            "photographer": photo["photographer"],
+            "pexels_url":   photo["url"],
+        }
+    except Exception as e:
+        print(f"Pexels error: {e}")
+        return None
+
+def upload_image_to_wp(image_url: str, filename: str, alt_text: str) -> int | None:
+    """Download image and upload to WP media library. Returns media ID."""
+    try:
+        img_data = requests.get(image_url, timeout=30).content
+        credentials = base64.b64encode(f"{WP_USER}:{WP_APP_PASSWORD}".encode()).decode()
+        r = requests.post(
+            f"{WP_URL}/wp-json/wp/v2/media",
+            headers={
+                "Authorization":       f"Basic {credentials}",
+                "Content-Disposition": f'attachment; filename="{filename}.jpg"',
+                "Content-Type":        "image/jpeg",
+            },
+            data=img_data,
+            timeout=60,
+        )
+        if r.status_code in (200, 201):
+            media_id = r.json().get("id")
+            # Set alt text
+            requests.post(
+                f"{WP_URL}/wp-json/wp/v2/media/{media_id}",
+                headers={
+                    "Authorization": f"Basic {credentials}",
+                    "Content-Type":  "application/json",
+                },
+                json={"alt_text": alt_text},
+                timeout=15,
+            )
+            return media_id
+    except Exception as e:
+        print(f"Image upload error: {e}")
+    return None
+
+# ── Claude article generation ───────────────────────────────────────
+def generate_article(topic: dict, existing_titles: list[str], home_excerpt: str) -> dict:
     year = datetime.utcnow().year
-    referral_block = "\n".join(
-        f'- {name}: {url}' for name, url in REFERRAL_LINKS.items()
-    )
-    existing_block = "\n".join(f"- {t}" for t in existing_titles[:30]) if existing_titles else "Ninguno aún."
+    referral_block = "\n".join(f'- {name}: {url}' for name, url in REFERRAL_LINKS.items())
+    existing_block = "\n".join(f"- {t}" for t in existing_titles[:40]) if existing_titles else "Ninguno."
 
-    system_prompt = f"""Eres el redactor de ladrillocolectivo.com, un blog sobre crowdfunding inmobiliario en España.
-El blog tiene este tagline: "La inflación se come tus ahorros. El ladrillo puede defenderlos."
+    system_prompt = f"""Eres el redactor de ladrillocolectivo.com, blog de crowdfunding inmobiliario en España.
+Tagline del blog: "La inflación se come tus ahorros. El ladrillo puede defenderlos."
 
-TONO Y ESTILO (imita esto exactamente):
-- Directo, práctico, tutea siempre al lector
+TONO Y ESTILO:
+- Directo, práctico, tutea al lector
 - Frases cortas. Párrafos de máximo 3-4 líneas
 - Abre con una pregunta retórica o un problema concreto del lector
-- Usa **negrita** para conceptos clave
-- Usa > blockquote para insights o tips importantes
-- Incluye ejemplos reales y datos concretos cuando puedas
-- Sin palabrería corporativa. Sin "en conclusión", "en resumen", "como hemos visto"
-- CTA natural, no agresivo: invitar a registrarse como si fuera un consejo de amigo
+- Usa <strong> para conceptos clave
+- Usa <blockquote> para insights o tips importantes
+- Datos concretos y ejemplos reales cuando sea posible
+- Sin "en conclusión", "en resumen", "como hemos visto"
+- CTA final natural: consejo de amigo, no vendedor
 
-REGLAS SEO (RankMath):
-- La keyword principal debe aparecer en el primer párrafo, en al menos un H2, y en el último párrafo
-- NO escribas el H1/título — WordPress lo pone solo. El contenido empieza directamente con el primer párrafo
-- Meta descripción: máximo 155 caracteres, incluye la keyword, termina con CTA suave
-- Slug: solo minúsculas, guiones, sin acentos ni ñ
+SEO (RankMath):
+- Keyword principal en: primer párrafo, al menos un H2, último párrafo
+- NO incluyas etiqueta <h1> — WordPress la pone automáticamente
+- El contenido empieza directamente con <p>
+- Meta descripción: máx 155 caracteres, incluye keyword, acaba con CTA suave
+- Slug: minúsculas, guiones, sin acentos ni ñ
 
-AÑO ACTUAL: {year}. No uses años pasados en títulos ni contenido.
+AÑO: {year}
 
-Responde ÚNICAMENTE con JSON válido, sin backticks ni texto extra."""
+Responde ÚNICAMENTE con JSON válido, sin backticks."""
 
-    user_prompt = f"""Escribe un artículo para ladrillocolectivo.com sobre: "{topic['title']}"
+    user_prompt = f"""Artículo para ladrillocolectivo.com: "{topic['title']}"
 
 Keyword principal: {topic['keyword']}
 Keywords secundarias: {', '.join(topic.get('secondary_keywords', []))}
-Intención de búsqueda: {topic['intent']}
+Intención: {topic['intent']}
 
-Links de referido disponibles (úsalos de forma natural, mínimo 2):
+Links internos disponibles (usa mínimo 2 de forma natural):
 {referral_block}
 
-Artículos ya publicados (NO repitas estos temas ni titles similares):
+CONTENIDO YA PUBLICADO — no repitas ni solapas con esto:
+Home del blog: {home_excerpt}
+
+Títulos ya publicados:
 {existing_block}
 
-Estructura del contenido HTML:
-- Primer párrafo: gancho con problema/pregunta del lector
-- 3-5 secciones con <h2>
-- Usa <strong>, <blockquote>, listas <ul> donde aporten valor
-- 2-3 links internos/referido integrados con naturalidad
-- Último párrafo: CTA suave hacia registro
+Estructura HTML requerida:
+- <p> de gancho (problema/pregunta del lector)
+- 3-5 secciones <h2>
+- <strong>, <blockquote>, <ul> donde aporten valor
+- 2-3 links internos integrados con naturalidad
+- Último <p>: CTA suave hacia registro
 
-Devuelve SOLO este JSON (sin backticks):
+JSON de respuesta (sin backticks):
 {{
-  "title": "Título SEO {year} — sin H1 duplicado, con keyword",
+  "title": "Título SEO {year} con keyword — sin duplicar home ni posts existentes",
   "slug": "slug-sin-acentos-ni-enie",
-  "content": "HTML completo SIN etiqueta h1 — empieza con <p>",
-  "excerpt": "Meta descripción 155 chars máx con keyword y CTA",
+  "content": "HTML completo empezando con <p>, sin <h1>",
+  "excerpt": "Meta descripción máx 155 chars con keyword y CTA",
   "focus_keyword": "{topic['keyword']}",
-  "tags": ["tag1", "tag2", "tag3"]
+  "image_search_query": "3-4 palabras en inglés para buscar imagen en Pexels"
 }}"""
 
     response = requests.post(
@@ -153,10 +223,9 @@ Devuelve SOLO este JSON (sin backticks):
     return json.loads(raw.strip())
 
 # ── WordPress publish ──────────────────────────────────────────────
-def publish_to_wordpress(article: dict) -> str:
+def publish_to_wordpress(article: dict, featured_image_id: int | None) -> str:
     credentials = base64.b64encode(f"{WP_USER}:{WP_APP_PASSWORD}".encode()).decode()
 
-    # Set RankMath focus keyword via meta
     payload = {
         "title":   article["title"],
         "content": article["content"],
@@ -168,12 +237,14 @@ def publish_to_wordpress(article: dict) -> str:
             "rank_math_description":   article.get("excerpt", ""),
         },
     }
+    if featured_image_id:
+        payload["featured_media"] = featured_image_id
 
     r = requests.post(
         f"{WP_URL}/wp-json/wp/v2/posts",
         headers={
             "Authorization": f"Basic {credentials}",
-            "Content-Type": "application/json",
+            "Content-Type":  "application/json",
         },
         json=payload,
         timeout=30,
@@ -186,17 +257,35 @@ def publish_to_wordpress(article: dict) -> str:
 def main():
     print(f"[{datetime.utcnow().isoformat()}] Starting...")
 
-    print("Fetching existing post titles...")
     existing_titles = get_existing_titles()
-    print(f"Found {len(existing_titles)} existing posts")
+    print(f"Existing posts: {len(existing_titles)}")
+
+    home_excerpt = get_home_excerpt()
+    print("Home page fetched for context")
 
     data, topic = pick_topic()
     print(f"Topic: {topic['title']}")
 
-    article = generate_article(topic, existing_titles)
+    article = generate_article(topic, existing_titles, home_excerpt)
     print(f"Generated: {article['title']}")
 
-    url = publish_to_wordpress(article)
+    # Featured image via Pexels
+    featured_image_id = None
+    if PEXELS_API_KEY:
+        query = article.get("image_search_query", "real estate investment spain")
+        print(f"Fetching image: {query}")
+        image = fetch_pexels_image(query)
+        if image:
+            featured_image_id = upload_image_to_wp(
+                image["url"],
+                article.get("slug", "article"),
+                article["title"],
+            )
+            print(f"Image uploaded, ID: {featured_image_id}")
+    else:
+        print("No PEXELS_API_KEY — skipping featured image")
+
+    url = publish_to_wordpress(article, featured_image_id)
     print(f"Published ({PUBLISH_STATUS}): {url or 'check WP dashboard'}")
 
     mark_done(data, topic["id"])
