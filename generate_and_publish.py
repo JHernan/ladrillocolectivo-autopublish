@@ -106,6 +106,7 @@ Devuelve SOLO este JSON:
         timeout=60,
     )
     response.raise_for_status()
+    print("WP response:", r.status_code, r.text[:500])
     raw = response.json()["content"][0]["text"]
 
     # Strip potential markdown fences
