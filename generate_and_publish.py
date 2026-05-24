@@ -106,8 +106,7 @@ Devuelve SOLO este JSON:
         timeout=60,
     )
     response.raise_for_status()
-    print("WP response:", r.status_code, r.text[:500])
-    raw = response.json()["content"][0]["text"]
+        raw = response.json()["content"][0]["text"]
 
     # Strip potential markdown fences
     raw = raw.strip()
@@ -141,6 +140,7 @@ def publish_to_wordpress(article: dict) -> str:
         json=payload,
         timeout=30,
     )
+    print("WP response:", r.status_code, r.text[:500])
     r.raise_for_status()
     return r.json().get("link", "")
 
