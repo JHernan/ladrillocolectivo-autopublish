@@ -23,7 +23,8 @@
         "civislend opiniones"
       ],
       "intent": "comparación: usuario listo para registrarse, solo decide en qué plataforma",
-      "status": "pending"
+      "status": "done",
+      "published_at": "2026-05-24T10:38:46.425716"
     },
     {
       "id": 3,
