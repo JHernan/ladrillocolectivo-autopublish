@@ -1,0 +1,43 @@
+name: Publish Article to WordPress
+
+on:
+  schedule:
+    # Lunes y jueves a las 9:00 hora Madrid (UTC+2 en verano = 07:00 UTC)
+    - cron: "0 7 * * 1,4"
+  workflow_dispatch: # permite lanzarlo manualmente desde GitHub
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          # Necesario para que el commit de queue.json actualizada funcione
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Generate and publish article
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WP_URL:            ${{ secrets.WP_URL }}
+          WP_USER:           ${{ secrets.WP_USER }}
+          WP_APP_PASSWORD:   ${{ secrets.WP_APP_PASSWORD }}
+          PUBLISH_STATUS:    draft
+        run: python generate_and_publish.py
+
+      - name: Commit updated topic queue
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add topics/queue.json
+          git diff --staged --quiet || git commit -m "chore: mark topic as done [skip ci]"
+          git push
