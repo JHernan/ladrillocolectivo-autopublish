@@ -106,7 +106,7 @@ Devuelve SOLO este JSON:
         timeout=60,
     )
     response.raise_for_status()
-        raw = response.json()["content"][0]["text"]
+    raw = response.json()["content"][0]["text"]
 
     # Strip potential markdown fences
     raw = raw.strip()
