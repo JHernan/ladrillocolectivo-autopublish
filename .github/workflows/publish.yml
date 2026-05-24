@@ -1,5 +1,4 @@
 name: Publish Article to WordPress
-
 on:
   schedule:
     # Lunes y jueves a las 9:00 hora Madrid (UTC+2 en verano = 07:00 UTC)
