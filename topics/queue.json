@@ -4,15 +4,24 @@
       "id": 1,
       "title": "Qué es el crowdfunding inmobiliario y cómo funciona en España",
       "keyword": "crowdfunding inmobiliario",
-      "secondary_keywords": ["inversión colectiva inmuebles", "crowdfunding inmobiliario españa", "invertir en ladrillo online"],
+      "secondary_keywords": [
+        "inversión colectiva inmuebles",
+        "crowdfunding inmobiliario españa",
+        "invertir en ladrillo online"
+      ],
       "intent": "informacional → transaccional: usuario que acaba de descubrir el concepto y quiere entender si es para él",
-      "status": "pending"
+      "status": "done",
+      "published_at": "2026-05-24T10:03:05.294093"
     },
     {
       "id": 2,
       "title": "Mejores plataformas de crowdfunding inmobiliario en España 2025",
       "keyword": "mejores plataformas crowdfunding inmobiliario",
-      "secondary_keywords": ["urbanitae opiniones", "wecity opiniones", "civislend opiniones"],
+      "secondary_keywords": [
+        "urbanitae opiniones",
+        "wecity opiniones",
+        "civislend opiniones"
+      ],
       "intent": "comparación: usuario listo para registrarse, solo decide en qué plataforma",
       "status": "pending"
     },
@@ -20,7 +29,11 @@
       "id": 3,
       "title": "Urbanitae: análisis completo, rentabilidades y cómo registrarse",
       "keyword": "urbanitae opiniones",
-      "secondary_keywords": ["urbanitae rentabilidad", "urbanitae review", "urbanitae es fiable"],
+      "secondary_keywords": [
+        "urbanitae rentabilidad",
+        "urbanitae review",
+        "urbanitae es fiable"
+      ],
       "intent": "transaccional: usuario considerando registrarse en Urbanitae",
       "status": "pending"
     },
@@ -28,7 +41,10 @@
       "id": 4,
       "title": "Cuánto dinero necesitas para empezar en crowdfunding inmobiliario",
       "keyword": "mínimo inversión crowdfunding inmobiliario",
-      "secondary_keywords": ["invertir 500 euros inmobiliario", "crowdfunding inmobiliario desde 100 euros"],
+      "secondary_keywords": [
+        "invertir 500 euros inmobiliario",
+        "crowdfunding inmobiliario desde 100 euros"
+      ],
       "intent": "informacional: barrera de entrada, lector con poco capital buscando si puede participar",
       "status": "pending"
     },
@@ -36,7 +52,10 @@
       "id": 5,
       "title": "Crowdfunding inmobiliario vs fondos indexados: ¿qué es mejor para tu perfil?",
       "keyword": "crowdfunding inmobiliario vs fondos indexados",
-      "secondary_keywords": ["rentabilidad crowdfunding inmobiliario", "alternativas inversión inmobiliaria"],
+      "secondary_keywords": [
+        "rentabilidad crowdfunding inmobiliario",
+        "alternativas inversión inmobiliaria"
+      ],
       "intent": "comparación: inversor con capital buscando dónde colocarlo",
       "status": "pending"
     },
@@ -44,7 +63,11 @@
       "id": 6,
       "title": "Riesgos del crowdfunding inmobiliario que nadie te cuenta",
       "keyword": "riesgos crowdfunding inmobiliario",
-      "secondary_keywords": ["crowdfunding inmobiliario seguro", "es fiable crowdfunding inmobiliario", "problemas crowdfunding inmobiliario"],
+      "secondary_keywords": [
+        "crowdfunding inmobiliario seguro",
+        "es fiable crowdfunding inmobiliario",
+        "problemas crowdfunding inmobiliario"
+      ],
       "intent": "informacional: lector cauto que quiere entender los riesgos antes de invertir",
       "status": "pending"
     },
@@ -52,7 +75,11 @@
       "id": 7,
       "title": "Wecity review: cómo funciona, proyectos y rentabilidades reales",
       "keyword": "wecity opiniones",
-      "secondary_keywords": ["wecity crowdfunding", "wecity review", "wecity rentabilidad"],
+      "secondary_keywords": [
+        "wecity crowdfunding",
+        "wecity review",
+        "wecity rentabilidad"
+      ],
       "intent": "transaccional: usuario evaluando Wecity como opción de registro",
       "status": "pending"
     },
@@ -60,7 +87,10 @@
       "id": 8,
       "title": "Cómo tributan las ganancias del crowdfunding inmobiliario en España",
       "keyword": "crowdfunding inmobiliario fiscalidad",
-      "secondary_keywords": ["crowdfunding inmobiliario impuestos", "declarar crowdfunding inmobiliario renta"],
+      "secondary_keywords": [
+        "crowdfunding inmobiliario impuestos",
+        "declarar crowdfunding inmobiliario renta"
+      ],
       "intent": "informacional: inversor activo o a punto de serlo, preocupado por la fiscalidad",
       "status": "pending"
     },
@@ -68,7 +98,11 @@
       "id": 9,
       "title": "Civislend análisis: plataforma de préstamos inmobiliarios con alta rentabilidad",
       "keyword": "civislend opiniones",
-      "secondary_keywords": ["civislend review", "civislend rentabilidad", "civislend es seguro"],
+      "secondary_keywords": [
+        "civislend review",
+        "civislend rentabilidad",
+        "civislend es seguro"
+      ],
       "intent": "transaccional: usuario evaluando Civislend",
       "status": "pending"
     },
@@ -76,7 +110,11 @@
       "id": 10,
       "title": "Crowdfunding inmobiliario de deuda vs equity: diferencias clave",
       "keyword": "crowdfunding inmobiliario deuda equity",
-      "secondary_keywords": ["crowdfunding equity inmobiliario", "préstamos inmobiliarios crowdfunding", "diferencias crowdfunding inmobiliario"],
+      "secondary_keywords": [
+        "crowdfunding equity inmobiliario",
+        "préstamos inmobiliarios crowdfunding",
+        "diferencias crowdfunding inmobiliario"
+      ],
       "intent": "informacional avanzado: inversor que ya conoce el sector y quiere profundizar",
       "status": "pending"
     },
@@ -84,7 +122,11 @@
       "id": 11,
       "title": "StockCrowd IN: opiniones, proyectos y cómo invertir paso a paso",
       "keyword": "stockcrowdin opiniones",
-      "secondary_keywords": ["stockcrowd in review", "stockcrowdin rentabilidad", "stockcrowdin registro"],
+      "secondary_keywords": [
+        "stockcrowd in review",
+        "stockcrowdin rentabilidad",
+        "stockcrowdin registro"
+      ],
       "intent": "transaccional: usuario evaluando StockCrowd IN",
       "status": "pending"
     },
@@ -92,7 +134,10 @@
       "id": 12,
       "title": "Rentabilidad real del crowdfunding inmobiliario: datos y expectativas realistas",
       "keyword": "rentabilidad crowdfunding inmobiliario",
-      "secondary_keywords": ["crowdfunding inmobiliario cuanto se gana", "tasa retorno crowdfunding inmobiliario"],
+      "secondary_keywords": [
+        "crowdfunding inmobiliario cuanto se gana",
+        "tasa retorno crowdfunding inmobiliario"
+      ],
       "intent": "informacional: usuario que quiere saber qué puede ganar realmente",
       "status": "pending"
     },
@@ -100,7 +145,10 @@
       "id": 13,
       "title": "Cómo diversificar tu cartera con crowdfunding inmobiliario",
       "keyword": "diversificar crowdfunding inmobiliario",
-      "secondary_keywords": ["cartera inversión inmobiliaria", "invertir en varias plataformas crowdfunding"],
+      "secondary_keywords": [
+        "cartera inversión inmobiliaria",
+        "invertir en varias plataformas crowdfunding"
+      ],
       "intent": "informacional: inversor que ya invierte y quiere optimizar su cartera",
       "status": "pending"
     },
@@ -108,7 +156,10 @@
       "id": 14,
       "title": "¿Es buen momento para invertir en crowdfunding inmobiliario en 2025?",
       "keyword": "invertir crowdfunding inmobiliario 2025",
-      "secondary_keywords": ["crowdfunding inmobiliario tendencias", "mercado inmobiliario crowdfunding"],
+      "secondary_keywords": [
+        "crowdfunding inmobiliario tendencias",
+        "mercado inmobiliario crowdfunding"
+      ],
       "intent": "informacional temporal: usuario buscando validación para actuar ahora",
       "status": "pending"
     },
@@ -116,7 +167,11 @@
       "id": 15,
       "title": "Housers: qué pasó y qué alternativas existen hoy",
       "keyword": "housers alternativas",
-      "secondary_keywords": ["housers problemas", "alternativas housers", "mejor plataforma que housers"],
+      "secondary_keywords": [
+        "housers problemas",
+        "alternativas housers",
+        "mejor plataforma que housers"
+      ],
       "intent": "transaccional: ex-usuario de Housers buscando dónde invertir ahora",
       "status": "pending"
     },
@@ -124,7 +179,10 @@
       "id": 16,
       "title": "Guía para principiantes: cómo hacer tu primera inversión en crowdfunding inmobiliario",
       "keyword": "como invertir crowdfunding inmobiliario",
-      "secondary_keywords": ["primeros pasos crowdfunding inmobiliario", "crowdfunding inmobiliario principiantes"],
+      "secondary_keywords": [
+        "primeros pasos crowdfunding inmobiliario",
+        "crowdfunding inmobiliario principiantes"
+      ],
       "intent": "transaccional: usuario listo para dar el primer paso",
       "status": "pending"
     },
@@ -132,7 +190,10 @@
       "id": 17,
       "title": "Regulación del crowdfunding inmobiliario en España: lo que debes saber",
       "keyword": "crowdfunding inmobiliario regulación españa",
-      "secondary_keywords": ["CNMV crowdfunding", "plataformas crowdfunding reguladas españa"],
+      "secondary_keywords": [
+        "CNMV crowdfunding",
+        "plataformas crowdfunding reguladas españa"
+      ],
       "intent": "informacional: inversor que quiere saber si está protegido legalmente",
       "status": "pending"
     },
@@ -140,7 +201,10 @@
       "id": 18,
       "title": "Crowdfunding inmobiliario para no residentes en España: ¿es posible?",
       "keyword": "crowdfunding inmobiliario no residentes",
-      "secondary_keywords": ["invertir inmobiliario españa extranjero", "crowdfunding inmobiliario desde fuera españa"],
+      "secondary_keywords": [
+        "invertir inmobiliario españa extranjero",
+        "crowdfunding inmobiliario desde fuera españa"
+      ],
       "intent": "informacional: usuario extranjero o expatriado queriendo invertir en España",
       "status": "pending"
     },
@@ -148,7 +212,10 @@
       "id": 19,
       "title": "Comparativa de comisiones en plataformas de crowdfunding inmobiliario",
       "keyword": "comisiones crowdfunding inmobiliario",
-      "secondary_keywords": ["costes crowdfunding inmobiliario", "plataformas crowdfunding sin comisiones"],
+      "secondary_keywords": [
+        "costes crowdfunding inmobiliario",
+        "plataformas crowdfunding sin comisiones"
+      ],
       "intent": "comparación: usuario optimizando costes antes de elegir plataforma",
       "status": "pending"
     },
@@ -156,7 +223,10 @@
       "id": 20,
       "title": "Experiencias reales de inversores en crowdfunding inmobiliario",
       "keyword": "experiencias crowdfunding inmobiliario",
-      "secondary_keywords": ["testimonios crowdfunding inmobiliario", "opiniones reales crowdfunding inmobiliario"],
+      "secondary_keywords": [
+        "testimonios crowdfunding inmobiliario",
+        "opiniones reales crowdfunding inmobiliario"
+      ],
       "intent": "social proof: usuario buscando validación externa antes de registrarse",
       "status": "pending"
     }
