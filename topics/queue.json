@@ -36,7 +36,8 @@
         "urbanitae es fiable"
       ],
       "intent": "transaccional: usuario considerando registrarse en Urbanitae",
-      "status": "pending"
+      "status": "done",
+      "published_at": "2026-05-25T11:04:28.263861"
     },
     {
       "id": 4,
