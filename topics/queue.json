@@ -48,7 +48,8 @@
         "crowdfunding inmobiliario desde 100 euros"
       ],
       "intent": "informacional: barrera de entrada, lector con poco capital buscando si puede participar",
-      "status": "pending"
+      "status": "done",
+      "published_at": "2026-05-28T10:44:06.515590"
     },
     {
       "id": 5,
