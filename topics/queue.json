@@ -60,7 +60,8 @@
         "alternativas inversión inmobiliaria"
       ],
       "intent": "comparación: inversor con capital buscando dónde colocarlo",
-      "status": "pending"
+      "status": "done",
+      "published_at": "2026-06-01T12:29:05.247306"
     },
     {
       "id": 6,
