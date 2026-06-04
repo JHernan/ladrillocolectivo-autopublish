@@ -73,7 +73,8 @@
         "problemas crowdfunding inmobiliario"
       ],
       "intent": "informacional: lector cauto que quiere entender los riesgos antes de invertir",
-      "status": "pending"
+      "status": "done",
+      "published_at": "2026-06-04T10:33:22.666598"
     },
     {
       "id": 7,
