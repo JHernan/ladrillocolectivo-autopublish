@@ -86,7 +86,8 @@
         "wecity rentabilidad"
       ],
       "intent": "transaccional: usuario evaluando Wecity como opción de registro",
-      "status": "pending"
+      "status": "done",
+      "published_at": "2026-06-08T11:48:56.930149"
     },
     {
       "id": 8,
